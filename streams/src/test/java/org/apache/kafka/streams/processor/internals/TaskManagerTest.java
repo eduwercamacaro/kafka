@@ -3053,12 +3053,12 @@ public class TaskManagerTest {
 
     @Test
     public void shouldNotCommitIfNoRevokedTasksNeedCommitting() {
-        final StateMachineTask task00 = new StateMachineTask(taskId00, taskId00Partitions, true, stateManager);
+        final StateMachineTask task00 = new StateMachineTask(taskId00, taskId00Partitions, true, stateDirectory, stateManager);
 
-        final StateMachineTask task01 = new StateMachineTask(taskId01, taskId01Partitions, true, stateManager);
+        final StateMachineTask task01 = new StateMachineTask(taskId01, taskId01Partitions, true, stateDirectory, stateManager);
         task01.setCommitNeeded();
 
-        final StateMachineTask task02 = new StateMachineTask(taskId02, taskId02Partitions, true, stateManager);
+        final StateMachineTask task02 = new StateMachineTask(taskId02, taskId02Partitions, true, stateDirectory, stateManager);
 
         final Map<TaskId, Set<TopicPartition>> assignmentActive = mkMap(
             mkEntry(taskId00, taskId00Partitions),
@@ -3088,12 +3088,12 @@ public class TaskManagerTest {
     public void shouldNotCommitIfNoRevokedTasksNeedCommittingWithEOSv2() {
         final TaskManager taskManager = setUpTaskManager(ProcessingMode.EXACTLY_ONCE_V2, false);
 
-        final StateMachineTask task00 = new StateMachineTask(taskId00, taskId00Partitions, true, stateManager);
+        final StateMachineTask task00 = new StateMachineTask(taskId00, taskId00Partitions, true, stateDirectory, stateManager);
 
-        final StateMachineTask task01 = new StateMachineTask(taskId01, taskId01Partitions, true, stateManager);
+        final StateMachineTask task01 = new StateMachineTask(taskId01, taskId01Partitions, true, stateDirectory, stateManager);
         task01.setCommitNeeded();
 
-        final StateMachineTask task02 = new StateMachineTask(taskId02, taskId02Partitions, true, stateManager);
+        final StateMachineTask task02 = new StateMachineTask(taskId02, taskId02Partitions, true, stateDirectory, stateManager);
 
         final Map<TaskId, Set<TopicPartition>> assignmentActive = mkMap(
             mkEntry(taskId00, taskId00Partitions),
