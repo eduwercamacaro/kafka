@@ -23,7 +23,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.processor.ConnectedStoreProvider;
 import org.apache.kafka.streams.processor.Punctuator;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
 import org.apache.kafka.streams.processor.api.FixedKeyProcessor;
 import org.apache.kafka.streams.processor.api.FixedKeyProcessorSupplier;
@@ -1493,9 +1493,9 @@ public interface KStream<K, V> {
      *
      * <p>By default, the processor is stateless (similar to {@link #flatMap(KeyValueMapper, Named)}, however, it also
      * has access to the {@link Record record's} timestamp and headers), but previously added
-     * {@link StateStore state stores} can be connected by providing their names as additional parameters, making
+     * {@link Store state stores} can be connected by providing their names as additional parameters, making
      * the processor stateful.
-     * There is two different {@link StateStore state stores}, which can be added to the underlying {@link Topology}:
+     * There is two different {@link Store state stores}, which can be added to the underlying {@link Topology}:
      * <ul>
      *   <li>{@link StreamsBuilder#addStateStore(StoreBuilder) state stores} for processing (i.e., read/write access)</li>
      *   <li>{@link StreamsBuilder#addGlobalStore(StoreBuilder, String, Consumed, ProcessorSupplier) read-only state stores}</li>

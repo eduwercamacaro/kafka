@@ -17,7 +17,7 @@
 package org.apache.kafka.streams.kstream.internals.graph;
 
 import org.apache.kafka.streams.kstream.internals.ConsumedInternal;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.api.ProcessorSupplier;
 import org.apache.kafka.streams.processor.internals.InternalTopologyBuilder;
 import org.apache.kafka.streams.processor.internals.StoreDelegatingProcessorSupplier;
@@ -25,7 +25,7 @@ import org.apache.kafka.streams.processor.internals.StoreFactory;
 
 import java.util.Set;
 
-public class GlobalStoreNode<KIn, VIn, S extends StateStore> extends StateStoreNode<S> {
+public class GlobalStoreNode<KIn, VIn, S extends Store> extends StateStoreNode<S> {
 
     private final String sourceName;
     private final String topic;

@@ -16,8 +16,7 @@
  */
 package org.apache.kafka.streams.processor.internals;
 
-import org.apache.kafka.streams.processor.StateStore;
-
+import org.apache.kafka.streams.processor.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,19 +37,19 @@ public class ProcessorTopology {
     private final Map<String, SourceNode<?, ?>> sourceNodesByTopic;
     private final Map<String, SinkNode<?, ?>> sinksByTopic;
     private final Set<String> terminalNodes;
-    private final List<StateStore> stateStores;
+    private final List<Store> stateStores;
     private final Set<String> repartitionTopics;
 
     // the following contains entries for the entire topology, eg stores that do not belong to this ProcessorTopology
-    private final List<StateStore> globalStateStores;
+    private final List<Store> globalStateStores;
     private final Map<String, String> storeToChangelogTopic;
     private final Map<String, Optional<InternalTopologyBuilder.ReprocessFactory<?, ?, ?, ?>>> storeNameToReprocessOnRestore;
 
     public ProcessorTopology(final List<ProcessorNode<?, ?, ?, ?>> processorNodes,
                              final Map<String, SourceNode<?, ?>> sourceNodesByTopic,
                              final Map<String, SinkNode<?, ?>> sinksByTopic,
-                             final List<StateStore> stateStores,
-                             final List<StateStore> globalStateStores,
+                             final List<Store> stateStores,
+                             final List<Store> globalStateStores,
                              final Map<String, String> storeToChangelogTopic,
                              final Set<String> repartitionTopics,
                              final Map<String, Optional<InternalTopologyBuilder.ReprocessFactory<?, ?, ?, ?>>> storeNameToReprocessOnRestore) {
@@ -104,7 +103,7 @@ public class ProcessorTopology {
         return processorNodes;
     }
 
-    public List<StateStore> stateStores() {
+    public List<Store> stateStores() {
         return stateStores;
     }
 
@@ -112,7 +111,7 @@ public class ProcessorTopology {
         return storeNameToReprocessOnRestore;
     }
 
-    public List<StateStore> globalStateStores() {
+    public List<Store> globalStateStores() {
         return Collections.unmodifiableList(globalStateStores);
     }
 
@@ -125,7 +124,7 @@ public class ProcessorTopology {
     }
 
     boolean hasStateWithChangelogs() {
-        for (final StateStore stateStore : stateStores) {
+        for (final Store stateStore : stateStores) {
             if (storeToChangelogTopic.containsKey(stateStore.name())) {
                 return true;
             }
@@ -134,7 +133,7 @@ public class ProcessorTopology {
     }
 
     public boolean hasPersistentLocalStore() {
-        for (final StateStore store : stateStores) {
+        for (final Store store : stateStores) {
             if (store.persistent()) {
                 return true;
             }
@@ -143,7 +142,7 @@ public class ProcessorTopology {
     }
 
     public boolean hasPersistentGlobalStore() {
-        for (final StateStore store : globalStateStores) {
+        for (final Store store : globalStateStores) {
             if (store.persistent()) {
                 return true;
             }

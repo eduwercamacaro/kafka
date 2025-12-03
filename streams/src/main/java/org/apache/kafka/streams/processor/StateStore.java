@@ -33,7 +33,7 @@ import org.apache.kafka.streams.query.QueryResult;
  * all data into this store directory.
  * The store directory must be created with the state directory.
  * The state directory can be obtained via {@link ProcessorContext#stateDir() #stateDir()} using the
- * {@link ProcessorContext} provided via {@link #init(StateStoreContext, StateStore) init(...)}.
+ * {@link ProcessorContext} provided via {@link #init(StateStoreContext, Store) init(...)}.
  * <p>
  * Using nested store directories within the state directory isolates different state stores.
  * If a state store would write into the state directory directly, it might conflict with others state stores and thus,
@@ -45,13 +45,8 @@ import org.apache.kafka.streams.query.QueryResult;
  * functionality required to reload a storage engine from its changelog as well
  * as basic lifecycle management.
  */
-public interface StateStore {
+public interface StateStore extends Store {
 
-    /**
-     * The name of this store.
-     * @return the storage name
-     */
-    String name();
 
     /**
      * Initializes this state store.
@@ -85,48 +80,6 @@ public interface StateStore {
      * as it will be called by the library automatically when necessary
      */
     void close();
-
-    /**
-     * Return if the storage is persistent or not.
-     *
-     * @return  {@code true} if the storage is persistent&mdash;{@code false} otherwise
-     */
-    boolean persistent();
-
-    /**
-     * Is this store open for reading and writing
-     * @return {@code true} if the store is open
-     */
-    boolean isOpen();
-
-    /**
-     * Execute a query. Returns a QueryResult containing either result data or
-     * a failure.
-     * <p>
-     * If the store doesn't know how to handle the given query, the result
-     * shall be a {@link FailureReason#UNKNOWN_QUERY_TYPE}.
-     * If the store couldn't satisfy the given position bound, the result
-     * shall be a {@link FailureReason#NOT_UP_TO_BOUND}.
-     * <p>
-     * Note to store implementers: if your store does not support position tracking,
-     * you can correctly respond {@link FailureReason#NOT_UP_TO_BOUND} if the argument is
-     * anything but {@link PositionBound#unbounded()}. Be sure to explain in the failure message
-     * that bounded positions are not supported.
-     * <p>
-     * @param query The query to execute
-     * @param positionBound The position the store must be at or past
-     * @param config Per query configuration parameters, such as whether the store should collect detailed execution
-     * info for the query
-     * @param <R> The result type
-     */
-    @Evolving
-    default <R> QueryResult<R> query(
-        final Query<R> query,
-        final PositionBound positionBound,
-        final QueryConfig config) {
-        // If a store doesn't implement a query handler, then all queries are unknown.
-        return QueryResult.forUnknownQueryType(query, this);
-    }
 
     /**
      * Returns the position the state store is at with respect to the input topic/partitions

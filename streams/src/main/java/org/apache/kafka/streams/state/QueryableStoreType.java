@@ -17,11 +17,11 @@
 package org.apache.kafka.streams.state;
 
 import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.state.internals.StateStoreProvider;
 
 /**
- * Used to enable querying of custom {@link StateStore} types via the {@link KafkaStreams} API.
+ * Used to enable querying of custom {@link Store} types via the {@link KafkaStreams} API.
  *
  * @param <T> The store type
  * @see QueryableStoreTypes
@@ -29,17 +29,17 @@ import org.apache.kafka.streams.state.internals.StateStoreProvider;
 public interface QueryableStoreType<T> {
 
     /**
-     * Called when searching for {@link StateStore}s to see if they
+     * Called when searching for {@link Store}s to see if they
      * match the type expected by implementors of this interface.
      *
      * @param stateStore    The stateStore
      * @return true if it is a match
      */
-    boolean accepts(final StateStore stateStore);
+    boolean accepts(final Store stateStore);
 
     /**
      * Create an instance of {@code T} (usually a facade) that developers can use
-     * to query the underlying {@link StateStore}s.
+     * to query the underlying {@link Store}s.
      *
      * @param storeProvider     provides access to all the underlying StateStore instances
      * @param storeName         The name of the Store

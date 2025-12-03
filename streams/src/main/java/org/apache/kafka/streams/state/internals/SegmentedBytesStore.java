@@ -18,7 +18,7 @@ package org.apache.kafka.streams.state.internals;
 
 import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.errors.InvalidStateStoreException;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.state.KeyValueIterator;
 
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
  * on time.
  * @see RocksDBSegmentedBytesStore
  */
-public interface SegmentedBytesStore extends StateStore {
+public interface SegmentedBytesStore extends Store {
 
     /**
      * Fetch all records from the segmented store with the provided key and time range

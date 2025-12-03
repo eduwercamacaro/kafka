@@ -17,7 +17,7 @@
 package org.apache.kafka.streams.state.internals;
 
 import org.apache.kafka.streams.errors.InvalidStateStoreException;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.state.QueryableStoreType;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.TimestampedKeyValueStore;
@@ -27,17 +27,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class GlobalStateStoreProvider implements StateStoreProvider {
-    private final Map<String, StateStore> globalStateStores;
+public class GlobalStoreProvider implements StateStoreProvider {
+    private final Map<String, Store> globalStateStores;
 
-    public GlobalStateStoreProvider(final Map<String, StateStore> globalStateStores) {
+    public GlobalStoreProvider(final Map<String, Store> globalStateStores) {
         this.globalStateStores = globalStateStores;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <T> List<T> stores(final String storeName, final QueryableStoreType<T> queryableStoreType) {
-        final StateStore store = globalStateStores.get(storeName);
+        final Store store = globalStateStores.get(storeName);
         if (store == null || !queryableStoreType.accepts(store)) {
             return Collections.emptyList();
         }

@@ -23,7 +23,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.TopologyConfig.TaskConfig;
 import org.apache.kafka.streams.errors.StreamsException;
 import org.apache.kafka.streams.errors.TaskMigratedException;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.TaskId;
 
 import org.slf4j.Logger;
@@ -126,7 +126,7 @@ public abstract class AbstractTask implements Task {
     }
 
     @Override
-    public StateStore store(final String name) {
+    public Store store(final String name) {
         return stateMgr.store(name);
     }
 

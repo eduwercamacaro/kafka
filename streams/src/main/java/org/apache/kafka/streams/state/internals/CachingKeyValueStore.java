@@ -32,6 +32,7 @@ import org.apache.kafka.streams.query.Query;
 import org.apache.kafka.streams.query.QueryConfig;
 import org.apache.kafka.streams.query.QueryResult;
 import org.apache.kafka.streams.state.KeyValueIterator;
+import org.apache.kafka.streams.state.KeyValueStateStore;
 import org.apache.kafka.streams.state.KeyValueStore;
 
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ import static org.apache.kafka.streams.state.internals.ExceptionUtils.executeAll
 import static org.apache.kafka.streams.state.internals.ExceptionUtils.throwSuppressed;
 
 public class CachingKeyValueStore
-    extends WrappedStateStore<KeyValueStore<Bytes, byte[]>, byte[], byte[]>
+    extends WrappedStateStore<KeyValueStateStore<Bytes, byte[]>, byte[], byte[]>
     implements KeyValueStore<Bytes, byte[]>, CachedStateStore<byte[], byte[]> {
 
     private static final Logger LOG = LoggerFactory.getLogger(CachingKeyValueStore.class);
@@ -88,7 +89,7 @@ public class CachingKeyValueStore
         );
 
 
-    CachingKeyValueStore(final KeyValueStore<Bytes, byte[]> underlying, final boolean timestampedSchema) {
+    CachingKeyValueStore(final KeyValueStateStore<Bytes, byte[]> underlying, final boolean timestampedSchema) {
         super(underlying);
         position = Position.emptyPosition();
         this.timestampedSchema = timestampedSchema;

@@ -16,7 +16,7 @@
  */
 package org.apache.kafka.streams.query;
 
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.query.internals.FailedQueryResult;
 import org.apache.kafka.streams.query.internals.SucceededQueryResult;
 
@@ -30,7 +30,7 @@ import java.util.List;
 public interface QueryResult<R> {
     /**
      * Static factory method to create a result object for a successful query. Used by StateStores
-     * to respond to a {@link StateStore#query(Query, PositionBound, QueryConfig)}.
+     * to respond to a {@link Store#query(Query, PositionBound, QueryConfig)}.
      */
     static <R> QueryResult<R> forResult(final R result) {
         return new SucceededQueryResult<>(result);
@@ -38,7 +38,7 @@ public interface QueryResult<R> {
 
     /**
      * Static factory method to create a result object for a failed query. Used by StateStores to
-     * respond to a {@link StateStore#query(Query, PositionBound, QueryConfig)}.
+     * respond to a {@link Store#query(Query, PositionBound, QueryConfig)}.
      */
     static <R> QueryResult<R> forFailure(
         final FailureReason failureReason,
@@ -51,11 +51,11 @@ public interface QueryResult<R> {
      * Static factory method to create a failed query result object to indicate that the store does
      * not know how to handle the query.
      * <p>
-     * Used by StateStores to respond to a {@link StateStore#query(Query, PositionBound, QueryConfig)}.
+     * Used by StateStores to respond to a {@link Store#query(Query, PositionBound, QueryConfig)}.
      */
     static <R> QueryResult<R> forUnknownQueryType(
         final Query<R> query,
-        final StateStore store) {
+        final Store store) {
 
         return forFailure(
             FailureReason.UNKNOWN_QUERY_TYPE,
@@ -68,7 +68,7 @@ public interface QueryResult<R> {
      * Static factory method to create a failed query result object to indicate that the store has
      * not yet caught up to the requested position bound.
      * <p>
-     * Used by StateStores to respond to a {@link StateStore#query(Query, PositionBound, QueryConfig)}.
+     * Used by StateStores to respond to a {@link Store#query(Query, PositionBound, QueryConfig)}.
      */
     static <R> QueryResult<R> notUpToBound(
         final Position currentPosition,

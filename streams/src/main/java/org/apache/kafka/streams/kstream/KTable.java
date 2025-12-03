@@ -25,7 +25,7 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.processor.ProcessorContext;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.StreamPartitioner;
 import org.apache.kafka.streams.processor.api.Record;
 import org.apache.kafka.streams.query.StateQueryRequest;
@@ -56,7 +56,7 @@ import java.util.function.Function;
  * Kafka Streams DSL can be mixed-and-matched with the Processor API (PAPI) (cf. {@link Topology}) via
  * {@link #transformValues(ValueTransformerWithKeySupplier, String...) transformValues(...)}.
  *
- * <p>Some {@code KTables} have an internal {@link StateStore state store} which can be accessed from "outside" using
+ * <p>Some {@code KTables} have an internal {@link Store state store} which can be accessed from "outside" using
  * the Interactive Queries (IQ) API (see {@link KafkaStreams#store(StoreQueryParameters) KafkaStreams#store(...)} and
  * {@link KafkaStreams#query(StateQueryRequest) KafkaStreams#query(...) [new API; evolving]} for details).
  * For example:
@@ -166,7 +166,7 @@ public interface KTable<K, V> {
      * <p>
      *
      * @param predicate     a filter {@link Predicate} that is applied to each record
-     * @param materialized  a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized  a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                      should be materialized. Cannot be {@code null}
      * @return a {@code KTable} that contains only those records that satisfy the given predicate
      * @see #filterNot(Predicate, Materialized)
@@ -207,7 +207,7 @@ public interface KTable<K, V> {
      *
      * @param predicate     a filter {@link Predicate} that is applied to each record
      * @param named         a {@link Named} config used to name the processor in the topology
-     * @param materialized  a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized  a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                      should be materialized. Cannot be {@code null}
      * @return a {@code KTable} that contains only those records that satisfy the given predicate
      * @see #filterNot(Predicate, Materialized)
@@ -293,7 +293,7 @@ public interface KTable<K, V> {
      * The store name to query with is specified by {@link Materialized#as(String)} or {@link Materialized#as(KeyValueBytesStoreSupplier)}.
      * <p>
      * @param predicate a filter {@link Predicate} that is applied to each record
-     * @param materialized  a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized  a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                      should be materialized. Cannot be {@code null}
      * @return a {@code KTable} that contains only those records that do <em>not</em> satisfy the given predicate
      * @see #filter(Predicate, Materialized)
@@ -333,7 +333,7 @@ public interface KTable<K, V> {
      * <p>
      * @param predicate a filter {@link Predicate} that is applied to each record
      * @param named     a {@link Named} config used to name the processor in the topology
-     * @param materialized  a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized  a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                      should be materialized. Cannot be {@code null}
      * @return a {@code KTable} that contains only those records that do <em>not</em> satisfy the given predicate
      * @see #filter(Predicate, Materialized)
@@ -507,7 +507,7 @@ public interface KTable<K, V> {
      * delete the corresponding record in the result {@code KTable}.
      *
      * @param mapper a {@link ValueMapper} that computes a new output value
-     * @param materialized  a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized  a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                      should be materialized. Cannot be {@code null}
      * @param <VR>   the value type of the result {@code KTable}
      *
@@ -554,7 +554,7 @@ public interface KTable<K, V> {
      *
      * @param mapper a {@link ValueMapper} that computes a new output value
      * @param named  a {@link Named} config used to name the processor in the topology
-     * @param materialized  a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized  a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                      should be materialized. Cannot be {@code null}
      * @param <VR>   the value type of the result {@code KTable}
      *
@@ -602,7 +602,7 @@ public interface KTable<K, V> {
      * delete the corresponding record in the result {@code KTable}.
      *
      * @param mapper a {@link ValueMapperWithKey} that computes a new output value
-     * @param materialized  a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized  a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                      should be materialized. Cannot be {@code null}
      * @param <VR>   the value type of the result {@code KTable}
      *
@@ -650,7 +650,7 @@ public interface KTable<K, V> {
      *
      * @param mapper a {@link ValueMapperWithKey} that computes a new output value
      * @param named  a {@link Named} config used to name the processor in the topology
-     * @param materialized  a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized  a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                      should be materialized. Cannot be {@code null}
      * @param <VR>   the value type of the result {@code KTable}
      *
@@ -2203,7 +2203,7 @@ public interface KTable<K, V> {
      * @param foreignKeyExtractor a {@link Function} that extracts the key (KO) from this table's value (V). If the
      *                            result is null, the update is ignored as invalid.
      * @param joiner              a {@link ValueJoiner} that computes the join result for a pair of matching records
-     * @param materialized        a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized        a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                            should be materialized. Cannot be {@code null}
      * @param <VR>                the value type of the result {@code KTable}
      * @param <KO>                the key type of the other {@code KTable}
@@ -2224,7 +2224,7 @@ public interface KTable<K, V> {
      * @param foreignKeyExtractor a {@link BiFunction} that extracts the key (KO) from this table's key and value (K, V). If the
      *                            result is null, the update is ignored as invalid.
      * @param joiner              a {@link ValueJoiner} that computes the join result for a pair of matching records
-     * @param materialized        a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized        a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                            should be materialized. Cannot be {@code null}
      * @param <VR>                the value type of the result {@code KTable}
      * @param <KO>                the key type of the other {@code KTable}
@@ -2249,7 +2249,7 @@ public interface KTable<K, V> {
      *                            result is null, the update is ignored as invalid.
      * @param joiner              a {@link ValueJoiner} that computes the join result for a pair of matching records
      * @param tableJoined         a {@link TableJoined} used to configure partitioners and names of internal topics and stores
-     * @param materialized        a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized        a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                            should be materialized. Cannot be {@code null}
      * @param <VR>                the value type of the result {@code KTable}
      * @param <KO>                the key type of the other {@code KTable}
@@ -2275,7 +2275,7 @@ public interface KTable<K, V> {
      *                            result is null, the update is ignored as invalid.
      * @param joiner              a {@link ValueJoiner} that computes the join result for a pair of matching records
      * @param tableJoined         a {@link TableJoined} used to configure partitioners and names of internal topics and stores
-     * @param materialized        a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized        a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                            should be materialized. Cannot be {@code null}
      * @param <VR>                the value type of the result {@code KTable}
      * @param <KO>                the key type of the other {@code KTable}
@@ -2377,7 +2377,7 @@ public interface KTable<K, V> {
      * @param foreignKeyExtractor a {@link Function} that extracts the key (KO) from this table's value (V). If the
      *                            extract is null, then the right hand side of the result will be null.
      * @param joiner              a {@link ValueJoiner} that computes the join result for a pair of matching records
-     * @param materialized        a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized        a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                            should be materialized. Cannot be {@code null}
      * @param <VR>                the value type of the result {@code KTable}
      * @param <KO>                the key type of the other {@code KTable}
@@ -2398,7 +2398,7 @@ public interface KTable<K, V> {
      * @param foreignKeyExtractor a {@link BiFunction} that extracts the key (KO) from this table's key and value (K, V). If the
      *                            extract is null, then the right hand side of the result will be null.
      * @param joiner              a {@link ValueJoiner} that computes the join result for a pair of matching records
-     * @param materialized        a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized        a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                            should be materialized. Cannot be {@code null}
      * @param <VR>                the value type of the result {@code KTable}
      * @param <KO>                the key type of the other {@code KTable}
@@ -2423,7 +2423,7 @@ public interface KTable<K, V> {
      *                            extract is null, then the right hand side of the result will be null.
      * @param joiner              a {@link ValueJoiner} that computes the join result for a pair of matching records
      * @param tableJoined         a {@link TableJoined} used to configure partitioners and names of internal topics and stores
-     * @param materialized        a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized        a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                            should be materialized. Cannot be {@code null}
      * @param <VR>                the value type of the result {@code KTable}
      * @param <KO>                the key type of the other {@code KTable}
@@ -2449,7 +2449,7 @@ public interface KTable<K, V> {
      *                            extract is null, then the right hand side of the result will be null.
      * @param joiner              a {@link ValueJoiner} that computes the join result for a pair of matching records
      * @param tableJoined         a {@link TableJoined} used to configure partitioners and names of internal topics and stores
-     * @param materialized        a {@link Materialized} that describes how the {@link StateStore} for the resulting {@code KTable}
+     * @param materialized        a {@link Materialized} that describes how the {@link Store} for the resulting {@code KTable}
      *                            should be materialized. Cannot be {@code null}
      * @param <VR>                the value type of the result {@code KTable}
      * @param <KO>                the key type of the other {@code KTable}

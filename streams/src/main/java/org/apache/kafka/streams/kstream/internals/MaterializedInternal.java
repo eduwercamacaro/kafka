@@ -20,7 +20,7 @@ import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.TopologyConfig;
 import org.apache.kafka.streams.kstream.Materialized;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.internals.InternalResourcesNaming;
 import org.apache.kafka.streams.state.DslStoreSuppliers;
 import org.apache.kafka.streams.state.StoreSupplier;
@@ -29,7 +29,7 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 
-public final class MaterializedInternal<K, V, S extends StateStore> extends Materialized<K, V, S> {
+public final class MaterializedInternal<K, V, S extends Store> extends Materialized<K, V, S> {
 
     private final boolean queryable;
 

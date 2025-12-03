@@ -27,7 +27,7 @@ import org.apache.kafka.streams.errors.TopologyException;
 import org.apache.kafka.streams.errors.UnknownTopologyException;
 import org.apache.kafka.streams.internals.StreamsConfigUtils;
 import org.apache.kafka.streams.internals.StreamsConfigUtils.ProcessingMode;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.TaskId;
 import org.apache.kafka.streams.processor.internals.InternalTopologyBuilder.TopicsInfo;
 import org.apache.kafka.streams.processor.internals.namedtopology.NamedTopology;
@@ -78,7 +78,7 @@ public class TopologyMetadata {
     private final ConcurrentNavigableMap<String, InternalTopologyBuilder> builders; // Keep sorted by topology name for readability
 
     private ProcessorTopology globalTopology;
-    private final Map<String, StateStore> globalStateStores = new HashMap<>();
+    private final Map<String, Store> globalStateStores = new HashMap<>();
     private final Set<String> allInputTopics = new HashSet<>();
     private final Map<String, Long> threadVersions = new ConcurrentHashMap<>();
 
@@ -512,7 +512,7 @@ public class TopologyMetadata {
         return globalTopology;
     }
 
-    public Map<String, StateStore> globalStateStores() {
+    public Map<String, Store> globalStateStores() {
         return globalStateStores;
     }
 

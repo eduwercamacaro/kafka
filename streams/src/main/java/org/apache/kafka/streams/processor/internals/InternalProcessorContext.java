@@ -23,6 +23,7 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.processor.RecordContext;
 import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.processor.StateStoreContext;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.internals.Task.TaskType;
 import org.apache.kafka.streams.processor.internals.metrics.StreamsMetricsImpl;
 import org.apache.kafka.streams.query.Position;
@@ -112,7 +113,7 @@ public interface InternalProcessorContext<KOut, VOut>
      * Get a correctly typed state store, given a handle on the original builder.
      */
     @SuppressWarnings("unchecked")
-    default <T extends StateStore> T getStateStore(final StoreBuilder<T> builder) {
+    default <T extends Store> T getStateStore(final StoreBuilder<T> builder) {
         return (T) getStateStore(builder.name());
     }
 

@@ -23,7 +23,7 @@ import org.apache.kafka.streams.KeyValue;
 import java.util.Collection;
 
 /**
- * Interface for batching restoration of a {@link StateStore}
+ * Interface for batching restoration of a {@link Store}
  *
  * It is expected that implementations of this class will not call the {@link StateRestoreCallback#restore(byte[],
  * byte[])} method.
@@ -31,7 +31,7 @@ import java.util.Collection;
 public interface BatchingStateRestoreCallback extends StateRestoreCallback {
 
     /**
-     * Called to restore a number of records. This method is called repeatedly until the {@link StateStore} is fully
+     * Called to restore a number of records. This method is called repeatedly until the {@link Store} is fully
      * restored.
      *
      * @param records the records to restore.

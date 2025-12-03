@@ -53,7 +53,7 @@ public class QueryableStoreProviderTest {
         globalStateStores = new HashMap<>();
         storeProvider =
             new QueryableStoreProvider(
-                new GlobalStateStoreProvider(globalStateStores)
+                new GlobalStoreProvider(globalStateStores)
             );
         storeProvider.addStoreProviderForThread("thread1", theStoreProvider);
     }

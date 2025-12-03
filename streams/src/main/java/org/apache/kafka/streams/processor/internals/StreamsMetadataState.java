@@ -23,7 +23,7 @@ import org.apache.kafka.common.utils.LogContext;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.KeyQueryMetadata;
 import org.apache.kafka.streams.StreamsMetadata;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.StreamPartitioner;
 import org.apache.kafka.streams.state.HostInfo;
 import org.apache.kafka.streams.state.internals.StreamsMetadataImpl;
@@ -234,7 +234,7 @@ public class StreamsMetadataState {
     /**
      * Find the {@link KeyQueryMetadata}s for a given storeName and key
      *
-     * Note: the key may not exist in the {@link StateStore},this method provides a way of finding which
+     * Note: the key may not exist in the {@link Store},this method provides a way of finding which
      * {@link StreamsMetadata} it would exist on.
      *
      * @param storeName   Name of the store

@@ -18,6 +18,7 @@ package org.apache.kafka.streams.state;
 
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.errors.InvalidStateStoreException;
+import org.apache.kafka.streams.processor.Store;
 
 /**
  * A key-value store that only supports read operations.
@@ -32,7 +33,7 @@ import org.apache.kafka.streams.errors.InvalidStateStoreException;
  * @param <K> the key type
  * @param <V> the value type
  */
-public interface ReadOnlyKeyValueStore<K, V> {
+public interface ReadOnlyKeyValueStore<K, V> extends Store {
 
     /**
      * Get the value corresponding to this key.

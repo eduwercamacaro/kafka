@@ -19,6 +19,7 @@ package org.apache.kafka.streams.state.internals;
 import org.apache.kafka.streams.errors.InvalidStateStoreException;
 import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.processor.StateStoreContext;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.query.Position;
 import org.apache.kafka.streams.query.PositionBound;
 import org.apache.kafka.streams.query.Query;
@@ -32,7 +33,7 @@ import org.apache.kafka.streams.state.VersionedBytesStore;
  */
 public abstract class WrappedStateStore<S extends StateStore, K, V> implements StateStore, CachedStateStore<K, V> {
 
-    public static boolean isTimestamped(final StateStore stateStore) {
+    public static boolean isTimestamped(final Store stateStore) {
         if (stateStore instanceof TimestampedBytesStore) {
             return true;
         } else if (stateStore instanceof WrappedStateStore) {
@@ -42,7 +43,7 @@ public abstract class WrappedStateStore<S extends StateStore, K, V> implements S
         }
     }
 
-    public static boolean isVersioned(final StateStore stateStore) {
+    public static boolean isVersioned(final Store stateStore) {
         if (stateStore instanceof VersionedBytesStore) {
             return true;
         } else if (stateStore instanceof WrappedStateStore) {

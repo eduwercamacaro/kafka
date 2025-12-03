@@ -18,14 +18,14 @@ package org.apache.kafka.streams.processor.internals;
 
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.TopologyConfig;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.state.StoreBuilder;
 
 import java.util.Map;
 import java.util.Set;
 
 /**
- * What! Another mechanism for obtaining a {@link StateStore}? This isn't just
+ * What! Another mechanism for obtaining a {@link Store}? This isn't just
  * an abuse of Java-isms... there's good reason for it. Here's how they are
  * interconnected:
  *
@@ -72,7 +72,7 @@ public interface StoreFactory extends ConfigurableStore {
 
     boolean isCompatibleWith(StoreFactory storeFactory);
 
-    class FactoryWrappingStoreBuilder<T extends StateStore> implements StoreBuilder<T>, ConfigurableStore {
+    class FactoryWrappingStoreBuilder<T extends Store> implements StoreBuilder<T>, ConfigurableStore {
 
         private final StoreFactory storeFactory;
 

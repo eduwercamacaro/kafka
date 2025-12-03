@@ -23,7 +23,7 @@ import org.apache.kafka.common.utils.Time;
 import org.apache.kafka.streams.errors.LockException;
 import org.apache.kafka.streams.errors.StreamsException;
 import org.apache.kafka.streams.errors.TaskCorruptedException;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.TaskId;
 
 import java.util.Arrays;
@@ -249,7 +249,7 @@ public interface Task {
 
     // IQ related methods
 
-    StateStore store(final String name);
+    Store store(final String name);
 
     /**
      * @return the offsets of all the changelog partitions associated with this task,

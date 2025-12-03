@@ -100,7 +100,7 @@ public interface ProcessorContext {
      * @throws IllegalStateException If store gets registered after initialized is already finished
      * @throws StreamsException if the store's change log does not contain the partition
      */
-    void register(final StateStore store,
+    void register(final Store store,
                   final StateRestoreCallback stateRestoreCallback);
 
     /**
@@ -119,7 +119,7 @@ public interface ProcessorContext {
      *
      * @throws ClassCastException if the return type isn't a type or interface of the actual returned store.
      */
-    <S extends StateStore> S getStateStore(final String name);
+    <S extends Store> S getStateStore(final String name);
 
     /**
      * Schedule a periodic operation for processors. A processor may call this method during a

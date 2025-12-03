@@ -33,11 +33,11 @@ public class QueryableStoreProvider {
 
     // map of StreamThread.name to StreamThreadStateStoreProvider
     private final Map<String, StreamThreadStateStoreProvider> storeProviders;
-    private final GlobalStateStoreProvider globalStoreProvider;
+    private final GlobalStoreProvider globalStoreProvider;
 
-    public QueryableStoreProvider(final GlobalStateStoreProvider globalStateStoreProvider) {
+    public QueryableStoreProvider(final GlobalStoreProvider globalStoreProvider) {
         this.storeProviders = new ConcurrentHashMap<>();
-        this.globalStoreProvider = globalStateStoreProvider;
+        this.globalStoreProvider = globalStoreProvider;
     }
 
     /**

@@ -61,7 +61,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.STRICT_STUBS)
-public class GlobalStateStoreProviderTest {
+public class GlobalStoreProviderTest {
     private final Map<String, StateStore> stores = new HashMap<>();
     private static final Map<String, Object> CONFIGS =  mkMap(mkEntry(StreamsConfig.InternalConfig.TOPIC_PREFIX_ALTERNATIVE, "appId"));
 
@@ -123,8 +123,8 @@ public class GlobalStateStoreProviderTest {
 
     @Test
     public void shouldReturnSingleItemListIfStoreExists() {
-        final GlobalStateStoreProvider provider =
-            new GlobalStateStoreProvider(Collections.singletonMap("global", new NoOpReadOnlyStore<>()));
+        final GlobalStoreProvider provider =
+            new GlobalStoreProvider(Collections.singletonMap("global", new NoOpReadOnlyStore<>()));
         final List<ReadOnlyKeyValueStore<Object, Object>> stores =
             provider.stores("global", QueryableStoreTypes.keyValueStore());
         assertEquals(1, stores.size());
@@ -132,7 +132,7 @@ public class GlobalStateStoreProviderTest {
 
     @Test
     public void shouldReturnEmptyItemListIfStoreDoesntExist() {
-        final GlobalStateStoreProvider provider = new GlobalStateStoreProvider(Collections.emptyMap());
+        final GlobalStoreProvider provider = new GlobalStoreProvider(Collections.emptyMap());
         final List<ReadOnlyKeyValueStore<Object, Object>> stores =
             provider.stores("global", QueryableStoreTypes.keyValueStore());
         assertTrue(stores.isEmpty());
@@ -142,15 +142,15 @@ public class GlobalStateStoreProviderTest {
     public void shouldThrowExceptionIfStoreIsntOpen() {
         final NoOpReadOnlyStore<Object, Object> store = new NoOpReadOnlyStore<>();
         store.close();
-        final GlobalStateStoreProvider provider =
-            new GlobalStateStoreProvider(Collections.singletonMap("global", store));
+        final GlobalStoreProvider provider =
+            new GlobalStoreProvider(Collections.singletonMap("global", store));
         assertThrows(InvalidStateStoreException.class, () -> provider.stores("global",
             QueryableStoreTypes.keyValueStore()));
     }
 
     @Test
     public void shouldReturnKeyValueStore() {
-        final GlobalStateStoreProvider provider = new GlobalStateStoreProvider(stores);
+        final GlobalStoreProvider provider = new GlobalStoreProvider(stores);
         final List<ReadOnlyKeyValueStore<String, String>> stores =
             provider.stores("kv-store", QueryableStoreTypes.keyValueStore());
         assertEquals(1, stores.size());
@@ -162,7 +162,7 @@ public class GlobalStateStoreProviderTest {
 
     @Test
     public void shouldReturnTimestampedKeyValueStore() {
-        final GlobalStateStoreProvider provider = new GlobalStateStoreProvider(stores);
+        final GlobalStoreProvider provider = new GlobalStoreProvider(stores);
         final List<ReadOnlyKeyValueStore<String, ValueAndTimestamp<String>>> stores =
             provider.stores("ts-kv-store", QueryableStoreTypes.timestampedKeyValueStore());
         assertEquals(1, stores.size());
@@ -174,7 +174,7 @@ public class GlobalStateStoreProviderTest {
 
     @Test
     public void shouldNotReturnKeyValueStoreAsTimestampedStore() {
-        final GlobalStateStoreProvider provider = new GlobalStateStoreProvider(stores);
+        final GlobalStoreProvider provider = new GlobalStoreProvider(stores);
         final List<ReadOnlyKeyValueStore<String, ValueAndTimestamp<String>>> stores =
             provider.stores("kv-store", QueryableStoreTypes.timestampedKeyValueStore());
         assertEquals(0, stores.size());
@@ -182,7 +182,7 @@ public class GlobalStateStoreProviderTest {
 
     @Test
     public void shouldReturnTimestampedKeyValueStoreAsKeyValueStore() {
-        final GlobalStateStoreProvider provider = new GlobalStateStoreProvider(stores);
+        final GlobalStoreProvider provider = new GlobalStoreProvider(stores);
         final List<ReadOnlyKeyValueStore<String, ValueAndTimestamp<String>>> stores =
             provider.stores("ts-kv-store", QueryableStoreTypes.keyValueStore());
         assertEquals(1, stores.size());
@@ -194,7 +194,7 @@ public class GlobalStateStoreProviderTest {
 
     @Test
     public void shouldReturnWindowStore() {
-        final GlobalStateStoreProvider provider = new GlobalStateStoreProvider(stores);
+        final GlobalStoreProvider provider = new GlobalStoreProvider(stores);
         final List<ReadOnlyWindowStore<String, String>> stores =
                 provider.stores("w-store", QueryableStoreTypes.windowStore());
         assertEquals(1, stores.size());
@@ -206,7 +206,7 @@ public class GlobalStateStoreProviderTest {
 
     @Test
     public void shouldNotReturnWindowStoreAsTimestampedStore() {
-        final GlobalStateStoreProvider provider = new GlobalStateStoreProvider(stores);
+        final GlobalStoreProvider provider = new GlobalStoreProvider(stores);
         final List<ReadOnlyWindowStore<String, ValueAndTimestamp<String>>> stores =
                 provider.stores("w-store", QueryableStoreTypes.timestampedWindowStore());
         assertEquals(0, stores.size());
@@ -214,7 +214,7 @@ public class GlobalStateStoreProviderTest {
 
     @Test
     public void shouldReturnTimestampedWindowStoreAsWindowStore() {
-        final GlobalStateStoreProvider provider = new GlobalStateStoreProvider(stores);
+        final GlobalStoreProvider provider = new GlobalStoreProvider(stores);
         final List<ReadOnlyWindowStore<String, ValueAndTimestamp<String>>> stores =
             provider.stores("ts-w-store", QueryableStoreTypes.windowStore());
         assertEquals(1, stores.size());
@@ -226,7 +226,7 @@ public class GlobalStateStoreProviderTest {
 
     @Test
     public void shouldReturnSessionStore() {
-        final GlobalStateStoreProvider provider = new GlobalStateStoreProvider(stores);
+        final GlobalStoreProvider provider = new GlobalStoreProvider(stores);
         final List<ReadOnlySessionStore<String, String>> stores =
                 provider.stores("s-store", QueryableStoreTypes.sessionStore());
         assertEquals(1, stores.size());

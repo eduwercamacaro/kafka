@@ -27,7 +27,7 @@ import org.apache.kafka.streams.TopologyConfig;
 import org.apache.kafka.streams.errors.TopologyException;
 import org.apache.kafka.streams.internals.ApiUtils;
 import org.apache.kafka.streams.internals.AutoOffsetResetInternal;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.StreamPartitioner;
 import org.apache.kafka.streams.processor.TimestampExtractor;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
@@ -109,7 +109,7 @@ public class InternalTopologyBuilder {
     private final Map<String, StoreFactory> globalStateBuilders = new LinkedHashMap<>();
 
     // built global state stores
-    private final Map<String, StateStore> globalStateStores = new LinkedHashMap<>();
+    private final Map<String, Store> globalStateStores = new LinkedHashMap<>();
 
     // Raw names of all source topics, without the application id/named topology prefix for repartition sources
     private final Set<String> rawSourceTopicNames = new HashSet<>();
@@ -1015,7 +1015,7 @@ public class InternalTopologyBuilder {
         final Map<String, ProcessorNode<?, ?, ?, ?>> processorMap = new LinkedHashMap<>();
         final Map<String, SourceNode<?, ?>> topicSourceMap = new HashMap<>();
         final Map<String, SinkNode<?, ?>> topicSinkMap = new HashMap<>();
-        final Map<String, StateStore> stateStoreMap = new LinkedHashMap<>();
+        final Map<String, Store> stateStoreMap = new LinkedHashMap<>();
         final Set<String> repartitionTopics = new HashSet<>();
 
         // create processor nodes in a topological order ("nodeFactories" is already topologically sorted)
@@ -1116,7 +1116,7 @@ public class InternalTopologyBuilder {
     }
 
     private void buildProcessorNode(final Map<String, ProcessorNode<?, ?, ?, ?>> processorMap,
-                                    final Map<String, StateStore> stateStoreMap,
+                                    final Map<String, Store> stateStoreMap,
                                     final ProcessorNodeFactory<?, ?, ?, ?> factory,
                                     final ProcessorNode<Object, Object, Object, Object> node) {
 
@@ -1126,7 +1126,7 @@ public class InternalTopologyBuilder {
         }
         for (final String stateStoreName : factory.stateStoreNames) {
             if (!stateStoreMap.containsKey(stateStoreName)) {
-                final StateStore store;
+                final Store store;
                 if (stateFactories.containsKey(stateStoreName)) {
                     final StoreFactory storeFactory = stateFactories.get(stateStoreName);
 
@@ -1158,11 +1158,11 @@ public class InternalTopologyBuilder {
     }
 
     /**
-     * Get any global {@link StateStore}s that are part of the
+     * Get any global {@link Store}s that are part of the
      * topology
-     * @return map containing all global {@link StateStore}s
+     * @return map containing all global {@link Store}s
      */
-    public Map<String, StateStore> globalStateStores() {
+    public Map<String, Store> globalStateStores() {
         Objects.requireNonNull(applicationId, "topology has not completed optimization");
 
         return Collections.unmodifiableMap(globalStateStores);

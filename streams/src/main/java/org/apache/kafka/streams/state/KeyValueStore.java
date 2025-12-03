@@ -18,7 +18,6 @@ package org.apache.kafka.streams.state;
 
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.errors.InvalidStateStoreException;
-import org.apache.kafka.streams.processor.StateStore;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ import java.util.List;
  * @param <K> The key type
  * @param <V> The value type
  */
-public interface KeyValueStore<K, V> extends StateStore, ReadOnlyKeyValueStore<K, V> {
+public interface KeyValueStore<K, V> extends ReadOnlyKeyValueStore<K, V> {
 
     /**
      * Update the value associated with this key.

@@ -20,6 +20,7 @@ import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.Windowed;
 import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.StateStoreContext;
 import org.apache.kafka.streams.state.KeyValueIterator;
 import org.apache.kafka.streams.state.KeyValueStore;
@@ -53,7 +54,7 @@ abstract class AbstractReadWriteDecorator<T extends StateStore, K, V> extends Wr
         throw new UnsupportedOperationException(ERROR_MESSAGE);
     }
 
-    static StateStore wrapWithReadWriteStore(final StateStore store) {
+    static Store wrapWithReadWriteStore(final Store store) {
         if (store instanceof TimestampedKeyValueStore) {
             return new TimestampedKeyValueStoreReadWriteDecorator<>((TimestampedKeyValueStore<?, ?>) store);
         } else if (store instanceof VersionedKeyValueStore) {

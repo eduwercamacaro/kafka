@@ -54,7 +54,7 @@ import org.apache.kafka.streams.internals.metrics.ClientMetrics;
 import org.apache.kafka.streams.internals.metrics.StreamsClientMetricsDelegatingReporter;
 import org.apache.kafka.streams.processor.StandbyUpdateListener;
 import org.apache.kafka.streams.processor.StateRestoreListener;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.StreamPartitioner;
 import org.apache.kafka.streams.processor.TaskId;
 import org.apache.kafka.streams.processor.internals.ClientUtils;
@@ -75,7 +75,7 @@ import org.apache.kafka.streams.query.QueryResult;
 import org.apache.kafka.streams.query.StateQueryRequest;
 import org.apache.kafka.streams.query.StateQueryResult;
 import org.apache.kafka.streams.state.HostInfo;
-import org.apache.kafka.streams.state.internals.GlobalStateStoreProvider;
+import org.apache.kafka.streams.state.internals.GlobalStoreProvider;
 import org.apache.kafka.streams.state.internals.QueryableStoreProvider;
 import org.apache.kafka.streams.state.internals.StreamThreadStateStoreProvider;
 
@@ -1033,13 +1033,13 @@ public class KafkaStreams implements AutoCloseable {
 
         streamStateListener = new StreamStateListener(globalThreadState);
 
-        final GlobalStateStoreProvider globalStateStoreProvider = new GlobalStateStoreProvider(this.topologyMetadata.globalStateStores());
+        final GlobalStoreProvider globalStoreProvider = new GlobalStoreProvider(this.topologyMetadata.globalStateStores());
 
         if (hasGlobalTopology) {
             globalStreamThread.setStateListener(streamStateListener);
         }
 
-        queryableStoreProvider = new QueryableStoreProvider(globalStateStoreProvider);
+        queryableStoreProvider = new QueryableStoreProvider(globalStoreProvider);
         for (int i = 1; i <= numStreamThreads; i++) {
             createAndAddStreamThread(cacheSizePerThread, i);
         }
@@ -1646,13 +1646,13 @@ public class KafkaStreams implements AutoCloseable {
     }
 
     /**
-     * Do a cleanup of the local {@link StateStore} directory ({@link StreamsConfig#STATE_DIR_CONFIG}) by deleting all
+     * Do a cleanup of the local {@link Store} directory ({@link StreamsConfig#STATE_DIR_CONFIG}) by deleting all
      * data with regard to the {@link StreamsConfig#APPLICATION_ID_CONFIG application ID}.
      * <p>
      * May only be called either before this {@code KafkaStreams} instance is {@link #start() started} or after the
      * instance is {@link #close() closed}.
      * <p>
-     * Calling this method triggers a restore of local {@link StateStore}s on the next {@link #start() application start}.
+     * Calling this method triggers a restore of local {@link Store}s on the next {@link #start() application start}.
      *
      * @throws IllegalStateException if this {@code KafkaStreams} instance has been started and hasn't fully shut down
      * @throws StreamsException if cleanup failed
@@ -1683,7 +1683,7 @@ public class KafkaStreams implements AutoCloseable {
      * <ul>
      *   <li>use the same {@link StreamsConfig#APPLICATION_ID_CONFIG application ID} as this instance (i.e., all
      *       instances that belong to the same Kafka Streams application)</li>
-     *   <li>and that contain a {@link StateStore} with the given {@code storeName}</li>
+     *   <li>and that contain a {@link Store} with the given {@code storeName}</li>
      * </ul>
      * and return {@link StreamsMetadata} for each discovered instance.
      * <p>
@@ -1733,11 +1733,11 @@ public class KafkaStreams implements AutoCloseable {
     }
 
     /**
-     * Get a facade wrapping the local {@link StateStore} instances with the provided {@link StoreQueryParameters}.
-     * The returned object can be used to query the {@link StateStore} instances.
+     * Get a facade wrapping the local {@link Store} instances with the provided {@link StoreQueryParameters}.
+     * The returned object can be used to query the {@link Store} instances.
      *
      * @param storeQueryParameters   the parameters used to fetch a queryable store
-     * @return A facade wrapping the local {@link StateStore} instances
+     * @return A facade wrapping the local {@link Store} instances
      * @throws StreamsNotStartedException If Streams has not yet been started. Just call {@link KafkaStreams#start()}
      *                                    and then retry this call.
      * @throws UnknownStateStoreException If the specified store name does not exist in the topology.
@@ -2063,7 +2063,7 @@ public class KafkaStreams implements AutoCloseable {
         }
         final StateQueryResult<R> result = new StateQueryResult<>();
 
-        final Map<String, StateStore> globalStateStores = topologyMetadata.globalStateStores();
+        final Map<String, Store> globalStateStores = topologyMetadata.globalStateStores();
         if (globalStateStores.containsKey(storeName)) {
             // See KAFKA-13523
             result.setGlobalResult(
@@ -2080,7 +2080,7 @@ public class KafkaStreams implements AutoCloseable {
                     final TaskId taskId = task.id();
                     final int partition = taskId.partition();
                     if (request.isAllPartitions() || request.getPartitions().contains(partition)) {
-                        final StateStore store = task.store(storeName);
+                        final Store store = task.store(storeName);
                         if (store != null) {
                             final StreamThread.State state = thread.state();
                             final boolean active = task.isActive();

@@ -17,7 +17,7 @@
 package org.apache.kafka.streams.kstream.internals;
 
 import org.apache.kafka.common.serialization.Serde;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.internals.StoreFactory;
 import org.apache.kafka.streams.state.StoreSupplier;
 
@@ -27,7 +27,7 @@ import java.util.Map;
  * {@code MaterializedStoreFactory} is the base class for any {@link StoreFactory} that
  * wraps a {@link MaterializedInternal} instance.
  */
-public abstract class MaterializedStoreFactory<K, V, S extends StateStore> extends AbstractConfigurableStoreFactory {
+public abstract class MaterializedStoreFactory<K, V, S extends Store> extends AbstractConfigurableStoreFactory {
     protected final MaterializedInternal<K, V, S> materialized;
 
     public MaterializedStoreFactory(final MaterializedInternal<K, V, S> materialized) {

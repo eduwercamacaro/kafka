@@ -25,7 +25,7 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.processor.PunctuationType;
 import org.apache.kafka.streams.processor.Punctuator;
 import org.apache.kafka.streams.processor.StateRestoreCallback;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.TaskId;
 import org.apache.kafka.streams.processor.To;
 
@@ -80,13 +80,13 @@ public final class ForwardingDisabledProcessorContext implements ProcessorContex
     }
 
     @Override
-    public void register(final StateStore store,
+    public void register(final Store store,
                          final StateRestoreCallback stateRestoreCallback) {
         delegate.register(store, stateRestoreCallback);
     }
 
     @Override
-    public <S extends StateStore> S getStateStore(final String name) {
+    public <S extends Store> S getStateStore(final String name) {
         return delegate.getStateStore(name);
     }
 

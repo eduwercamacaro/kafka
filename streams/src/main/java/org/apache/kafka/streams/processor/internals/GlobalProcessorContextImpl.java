@@ -22,7 +22,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.processor.Cancellable;
 import org.apache.kafka.streams.processor.PunctuationType;
 import org.apache.kafka.streams.processor.Punctuator;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.TaskId;
 import org.apache.kafka.streams.processor.To;
 import org.apache.kafka.streams.processor.api.FixedKeyRecord;
@@ -59,8 +59,8 @@ public class GlobalProcessorContextImpl extends AbstractProcessorContext<Object,
 
     @SuppressWarnings("unchecked")
     @Override
-    public <S extends StateStore> S getStateStore(final String name) {
-        final StateStore store = stateManager.globalStore(name);
+    public <S extends Store> S getStateStore(final String name) {
+        final Store store = stateManager.globalStore(name);
         return (S) wrapWithReadWriteStore(store);
     }
 

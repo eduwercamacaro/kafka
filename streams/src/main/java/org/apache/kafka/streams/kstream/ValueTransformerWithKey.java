@@ -21,7 +21,7 @@ import org.apache.kafka.streams.errors.StreamsException;
 import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.processor.PunctuationType;
 import org.apache.kafka.streams.processor.Punctuator;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.To;
 
 import java.time.Duration;
@@ -59,7 +59,7 @@ public interface ValueTransformerWithKey<K, V, VR> {
      * <p>
      * The provided {@link ProcessorContext context} can be used to access topology and record meta data, to
      * {@link ProcessorContext#schedule(Duration, PunctuationType, Punctuator) schedule} a method to be
-     * {@link Punctuator#punctuate(long) called periodically} and to access attached {@link StateStore}s.
+     * {@link Punctuator#punctuate(long) called periodically} and to access attached {@link Store}s.
      * <p>
      * Note that {@link ProcessorContext} is updated in the background with the current record's meta data.
      * Thus, it only contains valid record meta data when accessed within {@link #transform(Object, Object)}.
@@ -76,7 +76,7 @@ public interface ValueTransformerWithKey<K, V, VR> {
 
     /**
      * Transform the given [key and] value to a new value.
-     * Additionally, any {@link StateStore} that is {@link KTable#transformValues(ValueTransformerWithKeySupplier, Named, String...)
+     * Additionally, any {@link Store} that is {@link KTable#transformValues(ValueTransformerWithKeySupplier, Named, String...)
      * attached} to this operator can be accessed and modified arbitrarily (cf.
      * {@link ProcessorContext#getStateStore(String)}).
      * <p>

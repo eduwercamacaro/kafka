@@ -23,19 +23,19 @@ import org.apache.kafka.streams.processor.StateStore;
 import org.apache.kafka.streams.processor.StateStoreContext;
 import org.apache.kafka.streams.processor.internals.InternalProcessorContext;
 import org.apache.kafka.streams.state.KeyValueIterator;
-import org.apache.kafka.streams.state.KeyValueStore;
+import org.apache.kafka.streams.state.KeyValueStateStore;
 
 import java.util.List;
 
 import static org.apache.kafka.streams.processor.internals.ProcessorContextUtils.asInternalProcessorContext;
 
 public class ChangeLoggingKeyValueBytesStore
-        extends WrappedStateStore<KeyValueStore<Bytes, byte[]>, byte[], byte[]>
-        implements KeyValueStore<Bytes, byte[]> {
+        extends WrappedStateStore<KeyValueStateStore<Bytes, byte[]>, byte[], byte[]>
+        implements KeyValueStateStore<Bytes, byte[]> {
 
     InternalProcessorContext<?, ?> internalContext;
 
-    ChangeLoggingKeyValueBytesStore(final KeyValueStore<Bytes, byte[]> inner) {
+    ChangeLoggingKeyValueBytesStore(final KeyValueStateStore<Bytes, byte[]> inner) {
         super(inner);
     }
 

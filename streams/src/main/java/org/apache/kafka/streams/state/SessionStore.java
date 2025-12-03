@@ -19,7 +19,7 @@ package org.apache.kafka.streams.state;
 import org.apache.kafka.streams.internals.ApiUtils;
 import org.apache.kafka.streams.kstream.Window;
 import org.apache.kafka.streams.kstream.Windowed;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 
 import java.time.Instant;
 
@@ -37,7 +37,7 @@ import static org.apache.kafka.streams.internals.ApiUtils.prepareMillisCheckFail
  * @param <K>   type of the record keys
  * @param <AGG> type of the aggregated values
  */
-public interface SessionStore<K, AGG> extends StateStore, ReadOnlySessionStore<K, AGG> {
+public interface SessionStore<K, AGG> extends Store, ReadOnlySessionStore<K, AGG> {
 
     /**
      * Return all the session window entries that ends between the specified range (both ends are inclusive).

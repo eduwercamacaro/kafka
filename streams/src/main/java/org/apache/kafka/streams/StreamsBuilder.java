@@ -29,7 +29,7 @@ import org.apache.kafka.streams.kstream.ValueTransformerWithKeySupplier;
 import org.apache.kafka.streams.kstream.internals.ConsumedInternal;
 import org.apache.kafka.streams.kstream.internals.InternalStreamsBuilder;
 import org.apache.kafka.streams.kstream.internals.MaterializedInternal;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.TimestampExtractor;
 import org.apache.kafka.streams.processor.api.Processor;
 import org.apache.kafka.streams.processor.api.ProcessorSupplier;
@@ -521,7 +521,7 @@ public class StreamsBuilder {
      * or {@link org.apache.kafka.streams.kstream.KTable#transformValues(ValueTransformerWithKeySupplier, String...) ValueTransformers}
      * before they can be used.
      *
-     * @param builder the builder used to obtain this state store {@link StateStore} instance
+     * @param builder the builder used to obtain this state store {@link Store} instance
      * @return itself
      * @throws TopologyException if state store supplier is already added
      */
@@ -532,9 +532,9 @@ public class StreamsBuilder {
     }
 
     /**
-     * Adds a global {@link StateStore} to the topology.
-     * The {@link StateStore} sources its data from all partitions of the provided input topic.
-     * There will be exactly one instance of this {@link StateStore} per Kafka Streams instance.
+     * Adds a global {@link Store} to the topology.
+     * The {@link Store} sources its data from all partitions of the provided input topic.
+     * There will be exactly one instance of this {@link Store} per Kafka Streams instance.
      * <p>
      * A {@link SourceNode} with the provided sourceName will be added to consume the data arriving from the partitions
      * of the input topic.
@@ -544,7 +544,7 @@ public class StreamsBuilder {
      * The supplier should always generate a new instance. Creating a single {@link Processor} object
      * and returning the same object reference in {@link ProcessorSupplier#get()} is a
      * violation of the supplier pattern and leads to runtime exceptions.
-     * This {@link Processor} should be used to keep the {@link StateStore} up-to-date.
+     * This {@link Processor} should be used to keep the {@link Store} up-to-date.
      * The default {@link TimestampExtractor} as specified in the {@link StreamsConfig config} is used.
      * <p>
      * It is not required to connect a global store to the {@link Processor Processors},

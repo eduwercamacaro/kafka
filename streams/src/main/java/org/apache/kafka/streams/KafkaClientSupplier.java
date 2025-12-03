@@ -20,7 +20,7 @@ import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.streams.kstream.GlobalKTable;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 
 import java.util.Map;
 
@@ -59,7 +59,7 @@ public interface KafkaClientSupplier {
     Consumer<byte[], byte[]> getConsumer(final Map<String, Object> config);
 
     /**
-     * Create a {@link Consumer} which is used to read records to restore {@link StateStore}s.
+     * Create a {@link Consumer} which is used to read records to restore {@link Store}s.
      *
      * @param config {@link StreamsConfig#getRestoreConsumerConfigs(String) restore consumer config} which is supplied
      *               by the {@link java.util.Properties} given to the {@link KafkaStreams}

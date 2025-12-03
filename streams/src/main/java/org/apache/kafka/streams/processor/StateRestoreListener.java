@@ -33,9 +33,9 @@ import org.apache.kafka.common.TopicPartition;
  *
  * <p>
  * Note that this listener is only registered at the per-client level and users can base on the {@code storeName}
- * parameter to define specific monitoring for different {@link StateStore}s. There is another
+ * parameter to define specific monitoring for different {@link Store}s. There is another
  * {@link StateRestoreCallback} interface which is registered via the
- * {@link StateStoreContext#register(StateStore, StateRestoreCallback, CommitCallback)}
+ * {@link StateStoreContext#register(Store, StateRestoreCallback, CommitCallback)}
  * function per-store, and it is used to apply the fetched changelog records into the local state store during restoration.
  * These two interfaces serve different restoration purposes and users should not try to implement both of them in a single
  * class during state store registration.
@@ -51,7 +51,7 @@ import org.apache.kafka.common.TopicPartition;
 public interface StateRestoreListener {
 
     /**
-     * Method called at the very beginning of {@link StateStore} restoration.
+     * Method called at the very beginning of {@link Store} restoration.
      *
      * @param topicPartition the TopicPartition containing the values to restore
      * @param storeName      the name of the store undergoing restoration
@@ -84,7 +84,7 @@ public interface StateRestoreListener {
                          final long numRestored);
 
     /**
-     * Method called when restoring the {@link StateStore} is complete.
+     * Method called when restoring the {@link Store} is complete.
      *
      * @param topicPartition the TopicPartition containing the values to restore
      * @param storeName the name of the store just restored
@@ -95,7 +95,7 @@ public interface StateRestoreListener {
                       final long totalRestored);
 
     /**
-     * Method called when restoring the {@link StateStore} is suspended due to the task being migrated out of the host.
+     * Method called when restoring the {@link Store} is suspended due to the task being migrated out of the host.
      * If the migrated task is recycled or re-assigned back to the current host, another
      * {@link #onRestoreStart(TopicPartition, String, long, long)} would be called.
      *

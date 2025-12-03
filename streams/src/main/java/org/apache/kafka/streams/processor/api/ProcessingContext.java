@@ -26,6 +26,7 @@ import org.apache.kafka.streams.processor.Cancellable;
 import org.apache.kafka.streams.processor.PunctuationType;
 import org.apache.kafka.streams.processor.Punctuator;
 import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.TaskId;
 import org.apache.kafka.streams.processor.TimestampExtractor;
 import org.apache.kafka.streams.state.StoreBuilder;
@@ -120,7 +121,7 @@ public interface ProcessingContext {
      *
      * @throws ClassCastException if the return type isn't a type or interface of the actual returned store.
      */
-    <S extends StateStore> S getStateStore(final String name);
+    <S extends Store> S getStateStore(final String name);
 
     /**
      * Schedule a periodic operation for processors. A processor may call this method during

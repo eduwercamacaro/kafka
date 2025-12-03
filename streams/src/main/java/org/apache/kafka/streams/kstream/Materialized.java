@@ -18,7 +18,7 @@ package org.apache.kafka.streams.kstream;
 
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.utils.Bytes;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.state.BuiltInDslStoreSuppliers;
 import org.apache.kafka.streams.state.DslKeyValueParams;
 import org.apache.kafka.streams.state.DslSessionParams;
@@ -41,8 +41,8 @@ import static org.apache.kafka.streams.internals.ApiUtils.prepareMillisCheckFail
 import static org.apache.kafka.streams.internals.ApiUtils.validateMillisecondDuration;
 
 /**
- * Used to describe how a {@link StateStore} should be materialized.
- * You can either provide a custom {@link StateStore} backend through one of the provided methods accepting a supplier
+ * Used to describe how a {@link Store} should be materialized.
+ * You can either provide a custom {@link Store} backend through one of the provided methods accepting a supplier
  * or use the default RocksDB backends by providing just a store name.
  * <p>
  * For example, you can read a topic as {@link KTable} and force a state store materialization to access the content
@@ -84,7 +84,7 @@ import static org.apache.kafka.streams.internals.ApiUtils.validateMillisecondDur
  *
  * @see org.apache.kafka.streams.state.Stores
  */
-public class Materialized<K, V, S extends StateStore> {
+public class Materialized<K, V, S extends Store> {
     protected StoreSupplier<S> storeSupplier;
     protected String storeName;
     protected Serde<V> valueSerde;
@@ -156,21 +156,21 @@ public class Materialized<K, V, S extends StateStore> {
     }
 
     /**
-     * Materialize a {@link StateStore} with the given {@link DslStoreSuppliers}.
+     * Materialize a {@link Store} with the given {@link DslStoreSuppliers}.
      *
      * @param storeSuppliers  the type of the state store
      * @param <K>             key type of the store
      * @param <V>             value type of the store
-     * @param <S>             type of the {@link StateStore}
+     * @param <S>             type of the {@link Store}
      * @return a new {@link Materialized} instance with the given storeName
      */
-    public static <K, V, S extends StateStore> Materialized<K, V, S> as(final DslStoreSuppliers storeSuppliers) {
+    public static <K, V, S extends Store> Materialized<K, V, S> as(final DslStoreSuppliers storeSuppliers) {
         Objects.requireNonNull(storeSuppliers, "store type can't be null");
         return new Materialized<>(storeSuppliers);
     }
 
     /**
-     * Materialize a {@link StateStore} with the given name.
+     * Materialize a {@link Store} with the given name.
      * <p>
      * This method sets the name of the state store to be used during materialization. You can provide additional
      * configurations like key and value {@link Serde}s using {@link #withKeySerde(Serde)} and
@@ -196,10 +196,10 @@ public class Materialized<K, V, S extends StateStore> {
      * alphanumerics, '.', '_' and '-'.
      * @param <K>       key type of the store
      * @param <V>       value type of the store
-     * @param <S>       type of the {@link StateStore}
+     * @param <S>       type of the {@link Store}
      * @return a new {@link Materialized} instance with the given storeName
      */
-    public static <K, V, S extends StateStore> Materialized<K, V, S> as(final String storeName) {
+    public static <K, V, S extends Store> Materialized<K, V, S> as(final String storeName) {
         Named.validate(storeName);
         return new Materialized<>(storeName);
     }
@@ -252,7 +252,7 @@ public class Materialized<K, V, S extends StateStore> {
     }
 
     /**
-     * Materialize a {@link StateStore} with the provided key and value {@link Serde}s.
+     * Materialize a {@link Store} with the provided key and value {@link Serde}s.
      * <p>
      * Note: If this method is used after {@link #as(String)}, the original {@link Materialized} instance will be
      * replaced with a new instance, and any configuration on the first instance (e.g., store name) will be lost. To
@@ -281,13 +281,13 @@ public class Materialized<K, V, S extends StateStore> {
      * @param <S>           store type
      * @return a new {@link Materialized} instance with the given key and value serdes
      */
-    public static <K, V, S extends StateStore> Materialized<K, V, S> with(final Serde<K> keySerde,
+    public static <K, V, S extends Store> Materialized<K, V, S> with(final Serde<K> keySerde,
                                                                           final Serde<V> valueSerde) {
         return new Materialized<K, V, S>((String) null).withKeySerde(keySerde).withValueSerde(valueSerde);
     }
 
     /**
-     * Set the valueSerde the materialized {@link StateStore} will use.
+     * Set the valueSerde the materialized {@link Store} will use.
      *
      * @param valueSerde the value {@link Serde} to use. If the {@link Serde} is null, then the default value
      *                   serde from configs will be used. If the serialized bytes is null for put operations,
@@ -300,7 +300,7 @@ public class Materialized<K, V, S extends StateStore> {
     }
 
     /**
-     * Set the keySerde the materialized {@link StateStore} will use.
+     * Set the keySerde the materialized {@link Store} will use.
      * @param keySerde  the key {@link Serde} to use. If the {@link Serde} is null, then the default key
      *                  serde from configs will be used
      * @return itself
@@ -325,7 +325,7 @@ public class Materialized<K, V, S extends StateStore> {
     }
 
     /**
-     * Disable change logging for the materialized {@link StateStore}.
+     * Disable change logging for the materialized {@link Store}.
      * @return itself
      */
     public Materialized<K, V, S> withLoggingDisabled() {
@@ -335,7 +335,7 @@ public class Materialized<K, V, S extends StateStore> {
     }
 
     /**
-     * Enable caching for the materialized {@link StateStore}.
+     * Enable caching for the materialized {@link Store}.
      * @return itself
      */
     public Materialized<K, V, S> withCachingEnabled() {
@@ -344,7 +344,7 @@ public class Materialized<K, V, S extends StateStore> {
     }
 
     /**
-     * Disable caching for the materialized {@link StateStore}.
+     * Disable caching for the materialized {@link Store}.
      * @return itself
      */
     public Materialized<K, V, S> withCachingDisabled() {
@@ -378,7 +378,7 @@ public class Materialized<K, V, S extends StateStore> {
     }
 
     /**
-     * Set the type of the materialized {@link StateStore}.
+     * Set the type of the materialized {@link Store}.
      *
      * @param storeSuppliers  the store type {@link StoreType} to use.
      * @return itself

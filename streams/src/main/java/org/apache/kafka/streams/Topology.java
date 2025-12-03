@@ -24,7 +24,7 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.processor.ConnectedStoreProvider;
 import org.apache.kafka.streams.processor.Punctuator;
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.StreamPartitioner;
 import org.apache.kafka.streams.processor.TimestampExtractor;
 import org.apache.kafka.streams.processor.TopicNameExtractor;
@@ -583,7 +583,7 @@ public class Topology {
      * {@link #addSink(String, String, String...) sinks}.
      *
      * <p>By default, the processor is stateless.
-     * There is two different {@link StateStore state stores}, which can be added to the {@link Topology} and directly
+     * There is two different {@link Store state stores}, which can be added to the {@link Topology} and directly
      * connected to a processor, making the processor stateful:
      * <ul>
      *   <li>{@link #addStateStore(StoreBuilder, String...) state stores} for processing (i.e., read/write access)</li>
@@ -663,7 +663,7 @@ public class Topology {
     }
 
     /**
-     * Add a {@link StateStore state store} to the topology, and optionally connect it to one or more
+     * Add a {@link Store state store} to the topology, and optionally connect it to one or more
      * {@link #addProcessor(String, ProcessorSupplier, String...) processors}.
      * State stores are sharded and the number of shards is determined at runtime by the number of input topic
      * partitions and the structure of the topology.
@@ -696,7 +696,7 @@ public class Topology {
      * internal topic names, via {@link Topology#describe()}.
      *
      * @param storeBuilder
-     *        the {@link StoreBuilder} used to obtain {@link StateStore state store} instances (one per shard)
+     *        the {@link StoreBuilder} used to obtain {@link Store state store} instances (one per shard)
      * @param processorNames
      *        the names of the {@link #addProcessor(String, ProcessorSupplier, String...) processors} that should be
      *        able to access the provided state store
@@ -710,14 +710,14 @@ public class Topology {
      *         if {@code storeBuilder} or {@code parentNames} is {@code null}, or
      *         {@code parentNames} contains a {@code null} parent name
      */
-    public synchronized <S extends StateStore> Topology addStateStore(final StoreBuilder<S> storeBuilder,
+    public synchronized <S extends Store> Topology addStateStore(final StoreBuilder<S> storeBuilder,
                                                                       final String... processorNames) {
         internalTopologyBuilder.addStateStore(storeBuilder, processorNames);
         return this;
     }
 
     /**
-     * Adds a read-only {@link StateStore state store} to the topology.
+     * Adds a read-only {@link Store state store} to the topology.
      * The state store will be populated with data from the named source topic.
      * State stores are sharded and the number of shards is determined at runtime by the number of input topic
      * partitions for the source topic <em>and</em> the connected processors (if any).
@@ -743,7 +743,7 @@ public class Topology {
      * <p>The provided {@link ProcessorSupplier} will be used to create {@link Processor} instances which will be used
      * to process the records from the source topic.
      * These {@link Processor processors} are the only ones with <em>write</em> access to the state store,
-     * and should contain logic to keep the {@link StateStore} up-to-date.
+     * and should contain logic to keep the {@link Store} up-to-date.
      *
      * <p>Read-only state stores are always enabled for fault-tolerance and recovery.
      * In contrast to {@link #addStateStore(StoreBuilder, String...) "regular" state stores} no dedicated changelog
@@ -751,7 +751,7 @@ public class Topology {
      * Thus, the source topic should be configured with log compaction.
      *
      * @param storeBuilder
-     *        the {@link StoreBuilder} used to obtain {@link StateStore state store} instances (one per shard)
+     *        the {@link StoreBuilder} used to obtain {@link Store state store} instances (one per shard)
      * @param sourceName
      *        the unique name of the internally added {@link #addSource(String, String...) source}
      * @param keyDeserializer
@@ -780,7 +780,7 @@ public class Topology {
      *         if {@code storeBuilder}, {@code sourceName}, {@code topic}, {@code processorName}, or
      *         {@code stateUpdateSupplier} is {@code null}
      */
-    public synchronized <K, V, S extends StateStore> Topology addReadOnlyStateStore(
+    public synchronized <K, V, S extends Store> Topology addReadOnlyStateStore(
         final StoreBuilder<S> storeBuilder,
         final String sourceName,
         final Deserializer<K> keyDeserializer,
@@ -804,7 +804,7 @@ public class Topology {
     /**
      * See {@link #addReadOnlyStateStore(StoreBuilder, String, Deserializer, Deserializer, String, String, ProcessorSupplier)}.
      */
-    public synchronized <K, V, S extends StateStore> Topology addReadOnlyStateStore(
+    public synchronized <K, V, S extends Store> Topology addReadOnlyStateStore(
         final StoreBuilder<S> storeBuilder,
         final String sourceName,
         final TimestampExtractor timestampExtractor,
@@ -834,7 +834,7 @@ public class Topology {
 
 
     /**
-     * Adds a global {@link StateStore state store} to the topology.
+     * Adds a global {@link Store state store} to the topology.
      * The state store will be populated with data from the named source topic.
      * Global state stores are read-only, and contain data from all partitions of the specified source topic.
      * Thus, each {@link KafkaStreams} instance has a full copy to the data; the source topic records are effectively
@@ -858,7 +858,7 @@ public class Topology {
      * <p>The provided {@link ProcessorSupplier} will be used to create {@link Processor} instances which will be used
      * to process the records from the source topic.
      * These {@link Processor processors} are the only ones with <em>write</em> access to the state store,
-     * and should contain logic to keep the {@link StateStore} up-to-date.
+     * and should contain logic to keep the {@link Store} up-to-date.
      *
      * <p>Global state stores are always enabled for fault-tolerance and recovery.
      * In contrast to {@link #addStateStore(StoreBuilder, String...) "regular" state stores} no dedicated changelog
@@ -866,7 +866,7 @@ public class Topology {
      * Thus, the source topic should be configured with log compaction.
      *
      * @param storeBuilder
-     *        the {@link StoreBuilder} used to obtain the {@link StateStore state store} (one per {@link KafkaStreams} instance)
+     *        the {@link StoreBuilder} used to obtain the {@link Store state store} (one per {@link KafkaStreams} instance)
      * @param sourceName
      *        the unique name of the internally added source
      * @param keyDeserializer
@@ -895,7 +895,7 @@ public class Topology {
      *         if {@code storeBuilder}, {@code sourceName}, {@code topic}, {@code processorName}, or
      *         {@code stateUpdateSupplier} is {@code null}
      */
-    public synchronized <K, V, S extends StateStore> Topology addGlobalStore(
+    public synchronized <K, V, S extends Store> Topology addGlobalStore(
         final StoreBuilder<S> storeBuilder,
         final String sourceName,
         final Deserializer<K> keyDeserializer,
@@ -923,7 +923,7 @@ public class Topology {
     /**
      * See {@link #addGlobalStore(StoreBuilder, String, Deserializer, Deserializer, String, String, ProcessorSupplier)}.
      */
-    public synchronized <K, V, S extends StateStore> Topology addGlobalStore(
+    public synchronized <K, V, S extends Store> Topology addGlobalStore(
         final StoreBuilder<S> storeBuilder,
         final String sourceName,
         final TimestampExtractor timestampExtractor,
@@ -948,7 +948,7 @@ public class Topology {
 
     /**
      * Connect a {@link #addProcessor(String, ProcessorSupplier, String...) processor} to one or more
-     * {@link StateStore state stores}.
+     * {@link Store state stores}.
      * The state stores must have been previously added to the topology via
      * {@link #addStateStore(StoreBuilder, String...)}, or
      * {@link #addReadOnlyStateStore(StoreBuilder, String, Deserializer, Deserializer, String, String, ProcessorSupplier)}.

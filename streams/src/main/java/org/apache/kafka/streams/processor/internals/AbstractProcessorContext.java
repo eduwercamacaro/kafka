@@ -23,6 +23,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.processor.CommitCallback;
 import org.apache.kafka.streams.processor.StateRestoreCallback;
 import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.TaskId;
 import org.apache.kafka.streams.processor.api.RecordMetadata;
 import org.apache.kafka.streams.processor.internals.Task.TaskType;
@@ -113,13 +114,13 @@ public abstract class AbstractProcessorContext<KOut, VOut> implements InternalPr
     }
 
     @Override
-    public void register(final StateStore store,
+    public void register(final Store store,
                          final StateRestoreCallback stateRestoreCallback) {
         register(store, stateRestoreCallback, () -> { });
     }
 
     @Override
-    public void register(final StateStore store,
+    public void register(final Store store,
                          final StateRestoreCallback stateRestoreCallback,
                          final CommitCallback checkpoint) {
         if (initialized) {

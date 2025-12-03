@@ -16,15 +16,15 @@
  */
 package org.apache.kafka.streams.state;
 
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 
 import java.util.Map;
 
 /**
- * Build a {@link StateStore} wrapped with optional caching and logging.
+ * Build a {@link Store} wrapped with optional caching and logging.
  * @param <T>  the type of store to build
  */
-public interface StoreBuilder<T extends StateStore> {
+public interface StoreBuilder<T extends Store> {
 
     /**
      * Enable caching on the store.
@@ -57,22 +57,22 @@ public interface StoreBuilder<T extends StateStore> {
     /**
      * Build the store as defined by the builder.
      *
-     * @return the built {@link StateStore}
+     * @return the built {@link Store}
      */
     T build();
 
     /**
-     * Returns a Map containing any log configs that will be used when creating the changelog for the {@link StateStore}.
+     * Returns a Map containing any log configs that will be used when creating the changelog for the {@link Store}.
      * <p>
      * Note: any unrecognized configs will be ignored by the Kafka brokers.
      *
-     * @return Map containing any log configs to be used when creating the changelog for the {@link StateStore}
+     * @return Map containing any log configs to be used when creating the changelog for the {@link Store}
      * If {@code loggingEnabled} returns false, this function will always return an empty map
      */
     Map<String, String> logConfig();
 
     /**
-     * @return {@code true} if the {@link StateStore} should have logging enabled
+     * @return {@code true} if the {@link Store} should have logging enabled
      */
     boolean loggingEnabled();
 

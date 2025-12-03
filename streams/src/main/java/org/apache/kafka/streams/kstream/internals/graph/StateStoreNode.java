@@ -16,11 +16,11 @@
  */
 package org.apache.kafka.streams.kstream.internals.graph;
 
-import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 import org.apache.kafka.streams.processor.internals.InternalTopologyBuilder;
 import org.apache.kafka.streams.processor.internals.StoreFactory;
 
-public class StateStoreNode<S extends StateStore> extends GraphNode {
+public class StateStoreNode<S extends Store> extends GraphNode {
 
     protected final StoreFactory storeBuilder;
 

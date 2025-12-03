@@ -17,13 +17,14 @@
 package org.apache.kafka.streams.state;
 
 import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.processor.Store;
 
 /**
  * A state store supplier which can create one or more {@link StateStore} instances.
  *
  * @param <T> State store type
  */
-public interface StoreSupplier<T extends StateStore> {
+public interface StoreSupplier<T extends Store> {
     /**
      * Return the name of this state store supplier.
      * This must be a valid Kafka topic name; valid characters are ASCII alphanumerics, '.', '_' and '-'.

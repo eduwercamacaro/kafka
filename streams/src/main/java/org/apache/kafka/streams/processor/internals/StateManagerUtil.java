@@ -31,8 +31,10 @@ import org.apache.kafka.streams.state.internals.RecordConverter;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import static org.apache.kafka.streams.state.internals.RecordConverters.identity;
 import static org.apache.kafka.streams.state.internals.RecordConverters.rawValueToTimestampedValue;
@@ -100,7 +102,11 @@ final class StateManagerUtil {
 
         final boolean storeDirsEmpty = stateDirectory.directoryForTaskIsEmpty(id);
 
-        stateMgr.registerStateStores(topology.stateStores(), processorContext);
+        final List<StateStore> stateStores = topology.stateStores().stream()
+                .filter(store -> store instanceof StateStore)
+                .map(store -> (StateStore) store)
+                .collect(Collectors.toList());
+        stateMgr.registerStateStores(stateStores, processorContext);
         log.debug("Registered state stores");
 
         // We should only load checkpoint AFTER the corresponding state directory lock has been acquired and
